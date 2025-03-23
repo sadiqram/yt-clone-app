@@ -1,41 +1,52 @@
 import express from 'express';
-import ffmpeg from "fluent-ffmpeg"
+
+import * as VideoStorageHandler from './handle_vid_storage';    
+
+//Create local directories for raw and processed videos
+VideoStorageHandler.setupDirectories();
 const app = express();
 
 app.use(express.json());
 
 
-app.post("/process-video", (req,res) => {
-  // Get path of the input video from req body
-  const inputFilePath = req.body.inputFilePath
-  const outputFilePath = req.body.outputFilePath
+app.post("/process-video", async (req,res):Promise<any> => {
+    // Error fix :Using  :Promise<any> fixed the No Match overload error
+    //Get the bucket name and filename from Cloud Pub/Sub message
+    let data;
+    try{
+        //get message from cloud pub/sub and parse it
+        const message = Buffer.from(req.body.message.data, 'base64').toString('utf-8');
+        data = JSON.parse(message);
+        if(!data.name){
+            throw new Error("Invalid message payload received")
+        }
+    }catch(err){
+        console.error(`Error parsing message: ${err}`);
+        return res.status(400).send(`Bad Request: missing file name`);
+    }
 
-  //check if either of the input or output files for the video is defined
-  if(!inputFilePath || !outputFilePath){
-    const missingPath = []
-    if(!inputFilePath)missingPath.push('inputFilePath');
-    if(!outputFilePath)missingPath.push("outputFilePath")
+    //get the filename from the message
+    const inputfilename = data.name;
+    const outputfilename = `processed-${inputfilename}`;
     
-        res.status(400).json({
-            error: 'Bad Request: Missing required field(s)',
-            missing: missingPath
-          });
-  }
+    //Download video from GCS
+    await VideoStorageHandler.downloadRawVid(inputfilename)
 
-  ffmpeg(inputFilePath)
-    .outputOptions("-vf","scale=-1:360") //code for 360p video
-    .on("end",() => {
+    //Convert video to 360p
+    try{
 
-        res.status(200).send("Video processing finished successfully!")
-    })
-    .on("error", (err) => {
-        console.log(`An error occured ${err.message}`)
-        res.status(500).send(`Internal Server Error: ${err.message}`)
-    })
-    .save(outputFilePath);
+        await VideoStorageHandler.convertVideo(inputfilename,outputfilename);
+    } catch (err){
+        VideoStorageHandler.cleanup(inputfilename,outputfilename);
+        console.error(`Error processing video: ${err}`);
+        return res.status(500).send(`Internal Server Error: Video processing failed`);
+    }
 
-
-   
+    //Upload processed video to GSC
+    await VideoStorageHandler.uploadProcessedVid(outputfilename);
+    VideoStorageHandler.cleanup(inputfilename,outputfilename);
+    console.log(`Video processing complete!`);
+    return res.status(200).send(`Video processing complete!`);
 
 });
 

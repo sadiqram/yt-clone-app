@@ -113,6 +113,12 @@ export function deleteProcessedVid(filename: string){
     return deleteFile(`${localProcessedVidDir}/${filename}`)
 }
  
+export function cleanup(inputfilename: string, outputfilename: string){
+    return Promise.all([
+        deleteRawVid(inputfilename),
+        deleteProcessedVid(outputfilename)
+    ])
+}
 
 // function ensureDirExists(dirPath: string){
 //     if(!fs.existsSync(dirPath)){
