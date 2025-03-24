@@ -7,21 +7,22 @@ import ffmpeg from "fluent-ffmpeg";
 
 const storage =  new Storage(); //creates a new instance of the GCS storage class 
 
-const rawVidBucket = ""; //creates a new bucket instance for raw videos
-const processedVidBucket = ""; //creates a new bucket instance for processed videos
+const rawVidBucket = "sram-yt-raw-vids"; //creates a new bucket instance for raw videos
+const processedVidBucket = "sram-yt-processed-vids"; //creates a new bucket instance for processed videos
 
 const localRawVidDir = "./raw-vids"; //creates a local directory for raw videos
 const localProcessedVidDir = "./processed-vids"; //creates a local directory for processed videos
 
 //creates local directories for raw and procesed videos
-export function setupDirectories(){
-    if(!fs.existsSync('input')){
-        fs.mkdirSync('input');
+export function setupDirectories() {
+    if (!fs.existsSync(localRawVidDir)) {
+      fs.mkdirSync(localRawVidDir, { recursive: true });
     }
-    if(!fs.existsSync('output')){
-        fs.mkdirSync('output');
+    if (!fs.existsSync(localProcessedVidDir)) {
+      fs.mkdirSync(localProcessedVidDir, { recursive: true });
     }
-}
+  }
+  
 
 /*
 
