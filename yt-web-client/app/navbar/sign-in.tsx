@@ -17,6 +17,10 @@
 }
 
 convert to tailwaind css
+.signin {
+  @apply inline-block border text-[#065fd4] text-sm font-medium cursor-pointer px-5 py-2.5 rounded-3xl border-solid border-[gray] hover:bg-[#bee0fd] hover:border hover:border-solid hover:border-transparent;
+  font-family: "Roboto", "Arial", sans-serif;
+}
 
 */
 "use client";
@@ -36,7 +40,8 @@ export default function SignIn({ user }: SignInProps) {
         //show sign out button if the user is signed in
         <button
           onClick={signOut}
-          className="px-5 py-2 border border-gray-400 text-[#065fd4] rounded-full font-medium text-sm cursor-pointer hover:bg-[#bee0fd] hover:border-transparent transition0"
+          className="inline-block border text-[#065fd4] text-sm font-medium cursor-pointer px-5 py-2.5 rounded-3xl border-solid border-[gray] hover:bg-[#bee0fd] hover:border hover:border-solid hover:border-transparent "
+
         >
           Sign Out
         </button>
@@ -44,9 +49,10 @@ export default function SignIn({ user }: SignInProps) {
         //show sign in button if the user is not signed in
         <button
           onClick={signInWithGoogle}
-          className="px-5 py-2 border border-gray-400 text-[#065fd4] rounded-full font-medium text-sm cursor-pointer hover:bg-[#bee0fd] hover:border-transparent transition"
+          className="inline-block border text-[#065fd4] text-sm font-medium cursor-pointer px-5 py-2.5 rounded-3xl border-solid border-[gray] hover:bg-[#bee0fd] hover:border hover:border-solid hover:border-transparent"
+
         >
-          Sign In
+          Sign In to upload videos
         </button>
       )}
     </Fragment>

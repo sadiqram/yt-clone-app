@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-
+import './globals.css'
 import Navbar from "./navbar/navbar";
 
 
@@ -10,16 +10,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
+      
       <body
-        className={`font-sans bg-white text-black dark:bg-black dark:text-white`}
+        className=""
       >
+        <div className="flex flex-col min-h-[99.4vh]">
         <Navbar/>
+        <main style={{ flex: 1 }}>
         {children}
+        </main>
+        </div>
       </body>
     </html>
   );
