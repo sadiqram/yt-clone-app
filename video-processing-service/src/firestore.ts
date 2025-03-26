@@ -37,4 +37,4 @@ export interface Video {
   export  async function isVideoNew(videoId: string) {
     const video = await getVideo(videoId);
     return video?.status === undefined;
-  }``
+  }
