@@ -14,6 +14,7 @@ const storage = new Storage();
 // config to store these values after course completion
 const rawVidBucket = "sram-yt-raw-vids";
 
+const vidCollectionId = "videos";
 
 export const createUser = functions.auth.user().onCreate((user) => {
   const userInfo = {
@@ -61,3 +62,9 @@ export const generateUploadUrl = onCall(
     return {url, fileName};
   }
 );
+
+
+export const getVideos = onCall({maxInstances: 1}, async () => {
+  const snapshot =await firestore.collection(vidCollectionId).limit(10).get();
+  return snapshot.docs.map((doc) => doc.data());
+});
