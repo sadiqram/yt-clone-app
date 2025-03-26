@@ -1,6 +1,7 @@
 import express from 'express';
 
 import * as VideoStorageHandler from './handle_vid_storage';    
+import { isVideoNew, setVideo } from './firestore';
 
 //Create local directories for raw and processed videos
 VideoStorageHandler.setupDirectories();
@@ -28,6 +29,17 @@ app.post("/process-video", async (req,res):Promise<any> => {
     //get the filename from the message
     const inputfilename = data.name;
     const outputfilename = `processed-${inputfilename}`;
+    const vidId = inputfilename.split('.')[0];
+
+    if(!isVideoNew(vidId)){
+        return res.status(400).send(`Bad Request: Video already processed or processing`);
+    }else {
+        await setVideo(vidId, {
+            id: vidId,
+            uid: vidId.split('-')[0],
+            status: 'processing'
+        });
+    }
     
     //Download video from GCS
     await VideoStorageHandler.downloadRawVid(inputfilename)
@@ -44,6 +56,14 @@ app.post("/process-video", async (req,res):Promise<any> => {
 
     //Upload processed video to GSC
     await VideoStorageHandler.uploadProcessedVid(outputfilename);
+
+    //Update Firestore with video status
+    await setVideo(vidId, {
+        id: vidId, 
+        status: 'processed',
+        filename: outputfilename
+    });
+
     VideoStorageHandler.cleanup(inputfilename,outputfilename);
     console.log(`Video processing complete!`);
     return res.status(200).send(`Video processing complete!`);
