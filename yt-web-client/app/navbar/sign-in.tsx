@@ -30,25 +30,25 @@ interface SignInProps {
 }
 
 export default function SignIn({ user }: SignInProps) {
-  return(
-  <Fragment>
-    {user ? (
-      //show sign out button if the user is signed in
-      <button
-        onClick={signOut}
-        className="px-5 py-2 border border-gray-400 text-[#065fd4] rounded-full font-medium text-sm cursor-pointer hover:bg-[#bee0fd] hover:border-transparent transition0"
-      >
-        Sign Out
-      </button>
-    ) : (
-      //show sign in button if the user is not signed in
-      <button
-        onClick={signInWithGoogle}
-        className="px-5 py-2 border border-gray-400 text-[#065fd4] rounded-full font-medium text-sm cursor-pointer hover:bg-[#bee0fd] hover:border-transparent transition"
-      >
-        Sign In
-      </button>
-    )}
-  </Fragment>
+  return (
+    <Fragment>
+      {user ? (
+        //show sign out button if the user is signed in
+        <button
+          onClick={signOut}
+          className="px-5 py-2 border border-gray-400 text-[#065fd4] rounded-full font-medium text-sm cursor-pointer hover:bg-[#bee0fd] hover:border-transparent transition0"
+        >
+          Sign Out
+        </button>
+      ) : (
+        //show sign in button if the user is not signed in
+        <button
+          onClick={signInWithGoogle}
+          className="px-5 py-2 border border-gray-400 text-[#065fd4] rounded-full font-medium text-sm cursor-pointer hover:bg-[#bee0fd] hover:border-transparent transition"
+        >
+          Sign In
+        </button>
+      )}
+    </Fragment>
   );
 }

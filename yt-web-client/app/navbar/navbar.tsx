@@ -38,6 +38,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChangedHelper } from "../firebase/firebase";
 
 import { User } from "firebase/auth";
+import Upload from "./upload";
 
 //lookup js closure
 export default function Navbar() {
@@ -54,16 +55,20 @@ export default function Navbar() {
   return (
     <nav className="flex justify-between items-center p-4">
       <Link href="/" className="cursor-pointer">
-      <span className="flex items-center space-x-2">
+     
         <Image
           src="/youtube-logo.svg"
           alt="Youtube Logo"
           width={90}
           height={20}
         />
-        </span>
+       
       </Link>
-        <SignIn user={user} />
+      {
+        //show upload button if the user is signed in
+      user && <Upload />
+    } 
+      <SignIn user={user} />
      
     </nav>
   );
