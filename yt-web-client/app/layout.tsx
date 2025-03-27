@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       
       <body
-        className=""
+        // className=""
       >
         <div className="flex flex-col min-h-[99.4vh]">
         <Navbar/>
