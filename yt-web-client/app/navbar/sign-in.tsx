@@ -41,7 +41,6 @@ export default function SignIn({ user }: SignInProps) {
         <button
           onClick={signOut}
           className="inline-block border text-[#065fd4] text-sm font-medium cursor-pointer px-5 py-2.5 rounded-3xl border-solid border-[gray] hover:bg-[#bee0fd] hover:border hover:border-solid hover:border-transparent "
-
         >
           Sign Out
         </button>
